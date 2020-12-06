@@ -1,0 +1,41 @@
+
+Aplikacijica:
+
+
+    users/USER:
+        GET:
+            User profile
+            Username, email, groups, followers url, following url, posts url (number of for every url category)
+        PUT:
+            Create new user, has to contain email and password
+        POST:
+            Unavailable
+        HEAD:
+            -
+        DELETE:
+            Admin only, or user that does the request
+            Deletes the user
+        OPTIONS:
+
+
+    users/USER/followers:
+        User followers
+        List of followers:
+            username, email, url
+
+    users/USER/following:
+        User followers
+        List of followers:
+            username, email, url
+
+    users/USER/posts:
+        list of posts of the user:
+            post id
+            post url
+            post content
+
+    groups/GROUP:
+        Group id, date created, no_members, members url
+
+    groups/GROUP/members:
+        Group id, date created, no_members, members url

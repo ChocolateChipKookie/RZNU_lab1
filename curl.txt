@@ -1,0 +1,16 @@
+// Create user
+curl -X PUT -H "Content-Type: application/json" -d '{"username":"kookie","password":"password123","first_name":"Adi", "last_name":"Čaušević","email":"adiadiado@hotmail.com"}' http://localhost:8000/users/kookie
+
+// Modify attribute
+//     Possible attributes:
+//         username
+//         email
+//         first_name
+//         last_name
+//         password
+//         superuser   (change superuser status, can only be done by admin)
+
+curl -X PUT -u kookie:password123 -H "Content-Type: application/json" -d '{"username":"k00kie"}' "http://localhost:8000/users/kookie"
+
+// Delete user
+curl -X DELETE -u kookie:password123 http://localhost:8000/users/kookie
