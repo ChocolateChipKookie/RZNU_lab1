@@ -18,6 +18,13 @@ Aplikacijica:
         OPTIONS:
 
 
+    /post
+        POST:
+            Create new post
+        HEAD:
+        OPTIONS:
+
+
     users/USER/followers:
         User followers
         List of followers:
@@ -39,3 +46,106 @@ Aplikacijica:
 
     groups/GROUP/members:
         Group id, date created, no_members, members url
+
+Testiranje:
+    Svaki usecase nekoliko valjanih primjera i po jedan primjer za svaku gresku
+
+    Usecases radi:
+        Create User
+        Update user
+        Delete user
+        View user
+        Follow user
+        Unfollow user
+
+        Crete post
+        View post
+        View all posts by user
+        Delete post
+
+    Test:
+        Crete users
+        Change one username
+        Change one email
+        Change password
+        Change First name
+        Change Last name
+
+        View user between every change
+
+        Follow another user
+        View followed user
+        View user that followed another one
+        Chech if fields are updated
+
+        Create post
+        View post
+        View user, check if post number updated
+        Check user posts site
+        Delete post
+
+        Delete all users
+        Check if everything is like before
+
+
+
+
+
+
+    Usecases ne radi:
+        User:
+            Create user:
+                Create valid users
+                Try to make user with same username twice
+                Try to make user that contains non_alnum chars
+                Try to make user that contains only numbers
+                Try to make user with same email twice
+            Update user
+                Update valid params
+
+                Update username to double
+                update username to number
+                update username to non alnum
+                Update email to already existing
+                Update superuser without admin rights
+            Delete user
+                Try without authentication
+                Try to delete another user
+                Try to delete admin
+                Try to delete superuser
+                try to delete non existing user
+                Delete all created users
+            View user
+                Try viewing existing user
+                Try viewing non existing user
+            Follow user
+                Try non authenticated
+                Try follow yourself
+                try follow admin
+                try follow non existent user
+                Try follow user twice
+                Follow user
+            Unfollow user
+                Try non authenticated
+                Try with admin
+                Try unfollow non existent user
+                Try unfollow user you dont follow
+                Unfollow real user
+        Post:
+            Create post:
+                Create real post
+                Create too long post
+                Create post with pure user
+            View post:
+                Try check non existent post
+                Check real post
+            View posts by user:
+                List all user posts
+                List all posts by user that doesn't exist
+            Delete post:
+                Try non authenticated
+                Try deleting another users post
+                Try deleting non existing post
+                Delete own post
+
+

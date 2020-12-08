@@ -15,11 +15,18 @@ Including another URLconf
 """
 from django.urls import re_path, path, include
 from lab_1.rest_api import views
-from django.views.decorators.csrf import csrf_exempt
 
 
 urlpatterns = [
-    re_path(r'^test/?$', views.TestView.as_view()),
+    # Users
     re_path('^users/?$', views.UsersView.as_view(), name='user-list'),
-    path(r'users/<username>', csrf_exempt(views.UsersView.UserView.as_view()), name='user-detail'),
+    path('users/<username>', views.UsersView.UserView.as_view(), name='user-detail'),
+    # Follow
+    path('follow/<username>', views.UsersView.FollowView.as_view(), name='follow'),
+
+    # Posts
+    path('post', views.PostsView.NewPostView.as_view(), name='new-post'),
+    re_path('^posts/?$', views.PostsView.as_view(), name='post-list'),
+    path('posts/<int:id>', views.PostsView.PostView.as_view(), name='post-detail'),
+    path('posts/<username>', views.PostsView.UserPostsView.as_view(), name='posts-user-list'),
 ]

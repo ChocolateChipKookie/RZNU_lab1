@@ -1,17 +1,13 @@
-from django.contrib.auth.models import User, Group
 from lab_1.rest_api.models import *
 from rest_framework import serializers
 
 
-class UserSerializer(serializers.HyperlinkedModelSerializer):
+class UserSerializer(serializers.ModelSerializer):
     password = serializers.CharField(write_only=True, required=True)
 
     class Meta:
         model = User
-        fields = ('username', 'id', 'url', 'email', 'password', 'first_name', 'last_name', 'date_joined')
-        extra_kwargs = {
-            'url': {'view_name': 'user-detail', 'lookup_field': 'username'},
-        }
+        fields = ('username', 'id', 'email', 'password', 'first_name', 'last_name', 'date_joined')
 
     def validate(self, attrs):
         if User.objects.filter(email=attrs["email"].lower()).exists():
@@ -31,7 +27,7 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
         if "first_name" in validated_data:
             user.first_name = validated_data["first_name"]
             user.save()
-        if "surname" in validated_data:
+        if "last_name" in validated_data:
             user.last_name = validated_data["last_name"]
             user.save()
 
@@ -51,12 +47,23 @@ class UserSerializer(serializers.HyperlinkedModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
-    following = UserSerializer(required=True, many=True)
+    following_no = serializers.IntegerField(source='get_following_count')
+    following = serializers.HyperlinkedRelatedField(view_name='user-detail', lookup_field="username", read_only=True, many=True, source="get_following")
+
+    followers_no = serializers.IntegerField(source='get_followers_count')
+    followers = serializers.HyperlinkedRelatedField(view_name='user-detail', lookup_field="username", read_only=True, many=True, source="get_followers")
+
+
+    url = serializers.HyperlinkedRelatedField(view_name='user-detail', lookup_field='username', source='user', read_only=True)
+    follow_url = serializers.HyperlinkedRelatedField(view_name='follow', lookup_field='username', source='user', read_only=True)
+
+    posts = serializers.IntegerField(source='get_posts_count')
+    posts_url = serializers.HyperlinkedRelatedField(view_name='posts-user-list', lookup_field='username', source='user', read_only=True)
+
 
     class Meta:
         model=Profile
-        fields = ('following', 'user')
-
+        fields = ('url', 'follow_url', 'user', 'following', 'following_no', 'followers', 'followers_no', 'posts', 'posts_url')
 
     def create(self, validated_data):
         serializer = UserSerializer()
@@ -65,16 +72,11 @@ class ProfileSerializer(serializers.ModelSerializer):
         return profile
 
 
+class PostSerializer(serializers.ModelSerializer):
+    created_by = serializers.StringRelatedField(source='profile.user.username', read_only=True)
+    user_url = serializers.HyperlinkedRelatedField(view_name="user-detail", read_only=True, lookup_field='username', source='profile.user')
+    post_url = serializers.HyperlinkedIdentityField(view_name="post-detail", read_only=True, lookup_field="id")
 
-
-
-class GroupSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = Group
-        fields = ['url', 'name']
-
-
-class PostSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = Post
-        fields = ['content', 'created', 'profile']
+        fields = ['content', 'id', 'created', 'created_by', 'post_url', 'user_url']
