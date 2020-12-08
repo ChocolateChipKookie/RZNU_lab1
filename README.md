@@ -25,6 +25,7 @@ Social network that only uses HTTP.
     * **_username_** cannot be only a number
     * **_email_** not already in use
   * **Possible errors:** 
+    * Any of the three needed user arguments is missing
     * **_username_** in json and url don't match
     * **_username_** contains non-alphanumeric symbols
     * **_username_** is a number

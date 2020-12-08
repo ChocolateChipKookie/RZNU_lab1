@@ -47,17 +47,17 @@ class UserSerializer(serializers.ModelSerializer):
 
 class ProfileSerializer(serializers.ModelSerializer):
     user = UserSerializer(required=True)
-    following_no = serializers.IntegerField(source='get_following_count')
+    following_no = serializers.IntegerField(source='get_following_count', read_only=True)
     following = serializers.HyperlinkedRelatedField(view_name='user-detail', lookup_field="username", read_only=True, many=True, source="get_following")
 
-    followers_no = serializers.IntegerField(source='get_followers_count')
+    followers_no = serializers.IntegerField(source='get_followers_count', read_only=True)
     followers = serializers.HyperlinkedRelatedField(view_name='user-detail', lookup_field="username", read_only=True, many=True, source="get_followers")
 
 
     url = serializers.HyperlinkedRelatedField(view_name='user-detail', lookup_field='username', source='user', read_only=True)
     follow_url = serializers.HyperlinkedRelatedField(view_name='follow', lookup_field='username', source='user', read_only=True)
 
-    posts = serializers.IntegerField(source='get_posts_count')
+    posts = serializers.IntegerField(source='get_posts_count', read_only=True)
     posts_url = serializers.HyperlinkedRelatedField(view_name='posts-user-list', lookup_field='username', source='user', read_only=True)
 
 
